@@ -47,13 +47,13 @@ class Notepad(QWidget):
     def FileOpen(self):
         filename = QFileDialog.getOpenFileName(self,"File Open",os.getenv("HOME"))
 
-        with open(filename[0],"r") as file:
-            self.yazi_alani.setText(file.read())
+        with open(filename[0], "r") as file:
+            self.textarea.setText(file.read())
 
     def FileSave(self):
-        filename = QFileDialog.getSaveFileName(self,"File Save",os.getenv("HOME"))
+        filename = QFileDialog.getSaveFileName(self,"File Save", os.getenv("HOME"))
 
-        with open(filename[0],"w") as file:
+        with open(filename[0], "w") as file:
 
             file.write(self.textarea.toPlainText())
 
