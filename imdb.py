@@ -9,7 +9,7 @@ response = requests.get(url)
 htmlContent = response.content
 soup = BeautifulSoup(htmlContent, "html.parser")
 
-UserData = float(input("Please Type Filter Rating : "))
+UserData = float(input("Please write a rating number for filter : "))
 
 # start parser
 titles = soup.find_all("td", {"class": "titleColumn"})
