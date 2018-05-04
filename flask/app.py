@@ -1,8 +1,11 @@
+from functools import wraps
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
 from flask_mysqldb import MySQL
 from passlib.hash import sha256_crypt
-import Pages
-from Forms import RegisterForm, LoginForm
+from Auth import Auth
+import Blog
+import Dashboard
+from Forms import RegisterForm, LoginForm, PostCreateForm
 
 app = Flask(__name__)
 app.secret_key = sha256_crypt.encrypt("BlogApp")
@@ -17,23 +20,38 @@ mysql = MySQL(app)
 
 @app.route("/")
 def home():
-    return Pages.home()
+    return Blog.home()
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
-    return Pages.register(form = form, RequestMethod = request.method, dbObject = mysql)
+    return Auth.register(form = form, RequestMethod = request.method, dbObject = mysql)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)
-    return Pages.Login(form = form, RequestMethod = request.method, dbObject = mysql)
+    return Auth.Login(form = form, RequestMethod = request.method, dbObject = mysql)
 
 @app.route("/logout")
 def logoout():
-    session.clear()
-    flash("Info : Log Out complate..", "info")
-    return redirect(url_for("index"))
+    return Auth.Logout()
+
+
+@app.route("/dashboard")
+@Auth.isLogginRequired
+def dashboard():
+    return Dashboard.home()
+
+@app.route("/posts")
+@Auth.isLogginRequired
+def posts():
+    return Dashboard.posts()
+
+@app.route("/posts/new", methods = ["GET", "POST"])
+@Auth.isLogginRequired
+def PostCreate():
+    form = PostCreateForm(request.form)
+    return Dashboard.PostCreate(form = form, dbObject = mysql)
 
 if __name__ == '__main__':
     app.run(debug=True)

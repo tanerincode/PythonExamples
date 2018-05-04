@@ -12,7 +12,12 @@ class RegisterForm(Form):
     ])
     confirm_password = PasswordField("Confirm Password :")
 
-# user register form
+# user Login form
 class LoginForm(Form):
     username = StringField("Username :", validators=[validators.DataRequired(message="Username is required !")])
     password = PasswordField("Password :", validators=[validators.DataRequired(message="Password is required !")])
+
+# user register form
+class PostCreateForm(Form):
+    title = StringField("Title :", validators=[validators.DataRequired(message="Title is required !")])
+    content = TextAreaField("Title :", validators=[validators.DataRequired(message="Content is required !")])
