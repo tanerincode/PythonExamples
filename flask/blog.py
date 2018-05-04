@@ -7,26 +7,19 @@ from passlib.hash import sha256_crypt
 
 # user register form
 class RegisterForm(Form):
-    name = StringField("Name Surname :", validators=[validators.length(min = 4, max = 25 )])
-    username = StringField("Username :", validators=[validators.length(min = 5, max = 35 )])
-    email = StringField("E-Mail :", validators=[validators.Email(message = "E-Mail Failed !")])
+    name = StringField("Name Surname :", validators=[validators.length(min=4, max=25)])
+    username = StringField("Username :", validators=[validators.length(min=5, max=35)])
+    email = StringField("E-Mail :", validators=[validators.Email(message="E-Mail Failed !")])
     password = PasswordField("Password :", validators=[
-        validators.DataRequired(message = "Password is required !"),
-        validators.EqualTo(fieldname = "confirm_password", message = "Passwords not matched !")
+        validators.DataRequired(message="Password is required !"),
+        validators.EqualTo(fieldname="confirm_password", message="Passwords not matched !")
     ])
     confirm_password = PasswordField("Confirm Password :")
 
-
-
-
-
-
-
-
-
-
-
-
+# user register form
+class LoginForm(Form):
+    username = StringField("Username :", validators=[validators.DataRequired(message="Username is required !")])
+    password = PasswordField("Password :", validators=[validators.DataRequired(message="Password is required !")])
 
 
 app = Flask(__name__)
@@ -70,9 +63,41 @@ def register():
         cursor.close()
 
         flash("Successfuly : Register complate ...", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
     else:
         return render_template("register.html", form=form)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm(request.form)
+
+    if request.method == "POST" and form.validate():
+        username = form.username.data
+        password = form.password.data
+
+        cursor = mysql.connection.cursor()
+        query = "SELECT * FROM users WHERE username = %s"
+        result = cursor.execute(query, (username,))
+
+        if result > 0:
+            data = cursor.fetchone()
+            real_password = data['password']
+
+            if sha256_crypt.verify(password, real_password):
+                cursor.close()
+                flash("Success : Login Successfuly..", "success")
+                return redirect(url_for("index"))
+            else:
+                cursor.close()
+                flash("Error : Password not matched !", "danger")
+                return redirect(url_for("login"))
+
+        else:
+            cursor.close()
+            flash("Error : User Not Found !", "danger")
+            return redirect(url_for("login"))
+    else:
+        return render_template("login.html", form=form)
 
 
 @app.route("/posts")
