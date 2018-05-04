@@ -2,20 +2,20 @@ from flask import render_template, flash, redirect, url_for, session
 from passlib.hash import sha256_crypt
 
 
-def home() -> object:
+def home():
     return render_template("index.html")
 
-def register(form, RequestMethod, dbConn) -> object:
+def register(form, RequestMethod, dbObject):
     if RequestMethod == "POST" and form.validate():
 
         name = form.name.data
         username = form.username.data
         email = form.email.data
         password = sha256_crypt.encrypt(form.password.data)
-        cursor = dbConn.connection.cursor()
+        cursor = dbObject.connection.cursor()
 
         cursor.execute("INSERT into users(name, email, username, password) VALUES(%s, %s, %s, %s)", (name, email, username, password))
-        dbConn.connection.commit()
+        dbObject.connection.commit()
         cursor.close()
 
         flash("Successfuly : Register complate ...", "success")
@@ -24,7 +24,7 @@ def register(form, RequestMethod, dbConn) -> object:
         return render_template("register.html", form=form)
 
 
-def Login(form,RequestMethod, dbObject) -> object:
+def Login(form,RequestMethod, dbObject):
 
 
     if RequestMethod == "POST" and form.validate():

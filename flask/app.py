@@ -22,12 +22,12 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
-    return Pages.register(form, RequestMethod = request.method, dbConn = mysql)
+    return Pages.register(form, RequestMethod = request.method, dbObject = mysql)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)
-    return Pages.Login(form=form, RequestMethod = request.method, dbObject=mysql)
+    return Pages.Login(form=form, RequestMethod = request.method, dbObject = mysql)
 
 @app.route("/logout")
 def logoout():
