@@ -84,21 +84,26 @@ def login():
             real_password = data['password']
 
             if sha256_crypt.verify(password, real_password):
-                cursor.close()
                 flash("Success : Login Successfuly..", "success")
+
+                session["logged_in"] = True
+                session["username"] = username
                 return redirect(url_for("index"))
             else:
-                cursor.close()
                 flash("Error : Password not matched !", "danger")
                 return redirect(url_for("login"))
 
         else:
-            cursor.close()
             flash("Error : User Not Found !", "danger")
             return redirect(url_for("login"))
     else:
         return render_template("login.html", form=form)
 
+@app.route("/logout")
+def logoout():
+    session.clear()
+    flash("Info : Log Out complate..", "info")
+    return redirect(url_for("index"))
 
 @app.route("/posts")
 def posts():
