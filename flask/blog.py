@@ -30,6 +30,7 @@ class RegisterForm(Form):
 
 
 app = Flask(__name__)
+app.secret_key = "BlogApp"
 
 app.config["MYSQL_HOS"] = "localhost"
 app.config["MYSQL_USER"] = "root"
@@ -51,11 +52,25 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/register", methods = ["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
-    if request.method == "POST":
-        pass
+    if request.method == "POST" and form.validate():
+
+        name = form.name.data
+        username = form.username.data
+        email = form.email.data
+        password = sha256_crypt.encrypt(form.password.data)
+
+        cursor = mysql.connection.cursor()
+
+        query = "INSERT into users(name, email, username, password) VALUES(%s, %s, %s, %s)"
+        cursor.execute(query, (name, email, username, password))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("Successfuly : Register complate ...", "success")
+        return redirect(url_for("index"))
     else:
         return render_template("register.html", form=form)
 
