@@ -5,7 +5,7 @@
     <h3> Login </h3>
     <hr>
 
-    {% from "include/formhelpers.html" import render_field %}
+    {% from "_parts/formhelpers.html" import render_field %}
     <form method="post">
       <dl>
         {{ render_field(form.username, class = "form-control") }}
