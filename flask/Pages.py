@@ -24,7 +24,7 @@ def register(form, RequestMethod, dbObject):
         return render_template("register.html", form=form)
 
 
-def Login(form,RequestMethod, dbObject):
+def Login(form, RequestMethod, dbObject):
 
 
     if RequestMethod == "POST" and form.validate():
