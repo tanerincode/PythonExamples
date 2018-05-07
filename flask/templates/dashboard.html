@@ -3,4 +3,34 @@
      <h2>Welcome / home</h2>
      <hr>
      <a href="/posts/new" class="btn btn-primary">NEW POST</a>
+     <hr>
+     {% if posts %}
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for ps in posts %}
+              <tr>
+                <th scope="row">{{ ps.id }}</th>
+                <td>{{ ps.title }}</td>
+                <td>{{ ps.author }}</td>
+                <td>
+                     <a href="/post/edit/{{ ps.id }}" class="btn btn-info">Update</a>
+                     <a href="/post/delete/{{ ps.id }}" class="btn btn-danger">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+     {% else %}
+          <div class="alert alert-danger">
+               You have not written anything yet. click the new post button to create a post.
+          </div>
+     {% endif %}
 {% endblock %}

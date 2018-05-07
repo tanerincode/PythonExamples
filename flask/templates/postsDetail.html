@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if Post: %}
+    <h2><small>POSTS</small> / {{ Post.title }}</h2>
+    <hr>
+    Author: {{ Post.author }}
+    <hr>
+    Date: {{ Post.created_at }}
+    <hr>
+    {{Post.content|safe}}
+
+    {% else %}
+    <div class="alert alert-warning">
+        No such post was found !
+    </div>
+    {% endif %}
+{% endblock %}

@@ -3,12 +3,22 @@
      <h3>Posts / <small>Post Create</small></h3>
      <hr>
 
+    {% if form %}
+
+
     {% from "_parts/formhelpers.html" import render_field %}
     <form method="post">
       <dl>
         {{ render_field(form.title, class = "form-control") }}
         {{ render_field(form.content, class = "form-control") }}
       </dl>
-    <input type="submit" class="btn btn-primary" value="Create New Post">
+    <input type="submit" class="btn btn-primary" value="Update Post">
     </form>
+    {% else %}
+        <div class="alert alert-danger">
+            No such post was found !
+        </div>
+    {% endif %}
+
+
 {% endblock %}
